@@ -1,0 +1,89 @@
+﻿@model eBookStore.Models.User
+@{
+    Layout = "../Shared/_AdminLayout.cshtml";  // Custom layout with absolute path
+}
+<style>
+    .main-div{
+        width:100%;
+    }
+
+    .form-group-btn{
+        margin-top: 30px;
+    }
+
+    .form-group{
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="main-div">
+
+    <h2>Profile Details</h2>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <p style="color: red;">@ViewBag.ErrorMessage</p>
+    }
+
+    <form id="profileForm" method="post" asp-action="UpdateProfile" asp-controller="Admin">
+        <div class="form-group">
+            <label for="Name">Name</label>
+            <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" disabled />
+        </div>
+        <div class="form-group">
+            <label for="Email">Email</label>
+            <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" readonly />
+        </div>
+        <div class="form-group">
+            <label for="Role">Role</label>
+            <input type="text" class="form-control" id="Role" name="Role" value="@Model.Role" readonly />
+        </div>
+        <div class="form-group">
+            <label for="Password">Password</label>
+            <input type="password" class="form-control" id="Password" name="Password" value="@Model.Password" disabled />
+        </div>
+
+        <div class="form-group">
+            <button type="button" id="editBtn" class="btn btn-primary">Edit</button>
+            <button type="submit" id="saveBtn" class="btn btn-success" style="display:none;">Save</button>
+            <button type="button" id="cancelBtn" class="btn btn-danger" style="display:none;">Cancel</button>
+        </div>
+    </form>
+
+    @section Scripts {
+        <script>
+            document.getElementById("editBtn").addEventListener("click", function () {
+                // Enable Name and Password fields for editing
+                document.getElementById("Name").disabled = false;
+                document.getElementById("Password").disabled = false;
+
+                // Show Save and Cancel buttons
+                document.getElementById("saveBtn").style.display = "inline-block";
+                document.getElementById("cancelBtn").style.display = "inline-block";
+
+                // Hide Edit button
+                document.getElementById("editBtn").style.display = "none";
+            });
+
+            document.getElementById("cancelBtn").addEventListener("click", function () {
+                // Disable Name and Password fields again
+                document.getElementById("Name").disabled = true;
+                document.getElementById("Password").disabled = true;
+
+                // Hide Save and Cancel buttons
+                document.getElementById("saveBtn").style.display = "none";
+                document.getElementById("cancelBtn").style.display = "none";
+
+                // Show Edit button again
+                document.getElementById("editBtn").style.display = "inline-block";
+            });
+        </script>
+    }
+
+</div>

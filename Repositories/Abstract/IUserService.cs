@@ -6,7 +6,7 @@ public interface IUserService
 {
     bool AddUser(User user);
     bool UpdateUser(User user);
-    bool DeleteUser(int id);
-    User GetUserById(int id);
+    bool DeleteUser(string email);
+    User GetUserById(string email);
     IEnumerable<User> GetAllUsers();
 }

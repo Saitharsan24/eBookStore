@@ -1,0 +1,20 @@
+﻿@model IEnumerable<Book>
+@{
+    ViewData["Title"] = "List of Books";
+}
+
+
+<div class="d-flex flex-row justify-content-center flex-wrap gap-3">
+    @foreach (var item in Model)
+    {
+        <div class="card" style="width: 18rem;">
+            <img src="@item.ImageURL" class="card-img-top" alt="@item.ImageURL">
+            <div class="card-body">
+                <h5 class="card-title">@item.Title</h5>
+                <p class="card-text">@item.Category</p>
+                <p class="card-text">@item.Author</p>
+                <p class="card-text">$ @item.Price</p>
+            </div>
+        </div>
+    }
+</div>

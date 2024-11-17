@@ -11,10 +11,10 @@
       <a class="navbar-brand" href="#">eBookStore</a>
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-          <a class="nav-item nav-link active" href="#">Home</a>
-          <a class="nav-item nav-link" href="#">Books</a>
-          <a class="nav-item nav-link" href="#">Login</a>
-          <a class="nav-item nav-link" href="#">Signup</a>
+          <a class="nav-item nav-link" onclick="window.location.href='@Url.Action("Index", "Admin")'">Home</a>
+          <a class="nav-item nav-link" onclick="window.location.href='@Url.Action("Order", "Admin")'">Books</a>
+          <a class="nav-item nav-link" onclick="window.location.href='@Url.Action("User", "Admin")'">Login</a>
+          <a class="nav-item nav-link" onclick="window.location.href='@Url.Action("Profile", "Admin")'">Signup</a>
         </div>
       </div>
     </nav>

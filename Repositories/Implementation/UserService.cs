@@ -1,5 +1,6 @@
 ﻿using eBookStore.Models;
 using eBookStore.Repositories.Abstract;
+using Microsoft.AspNetCore.Mvc;
 
 namespace eBookStore.Repositories.Implementation;
 
@@ -20,12 +21,13 @@ public class UserService(AppDbContex context) : IUserService
         }
     }
 
-    public bool DeleteUser(int id)
+    [HttpPost]
+    public bool DeleteUser(string email)
     {
         try
         {
-            var data = this.GetUserById(id);
-            if (data != null)
+            var data = this.GetUserById(email);
+            if (data == null)
             {
                 return false;
             }
@@ -46,16 +48,20 @@ public class UserService(AppDbContex context) : IUserService
         return context.User.ToList();
     }
 
-    public User GetUserById(int id)
+    public User GetUserById(string email)
     {
-        return context.User.Find(id);
+        return context.User.FirstOrDefault(x => x.Email == email);
     }
 
     public bool UpdateUser(User user)
     {
         try
         {
-            context.User.Update(user);
+            var userObject = GetUserById(user.Email);
+            userObject.Name = user.Name;
+            userObject.Password = user.Password;
+
+            context.User.Update(userObject);
             context.SaveChanges();
             return true;
         }

@@ -1,32 +1,30 @@
-using eBookStore.Models;
+using eBookStore.Repositories.Abstract;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
 namespace eBookStore.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController(IBookService service) : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
 
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Books(string searchString)
         {
-            return View();
+            // Retrieve books from the database
+            var books = service.GetAllBooks();
+
+            // Filter books if search string is provided
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                books = books.Where(b => b.Title.Contains(searchString) || b.Author.Contains(searchString));
+            }
+
+            return View(books.ToList());
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+
     }
 }

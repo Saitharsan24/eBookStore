@@ -6,8 +6,10 @@ namespace eBookStore.Controllers;
 
 public class BookController(IBookService service) : Controller
 {
-    public IActionResult Add()
+    public IActionResult Index()
     {
+        var data = this.GetAll();
+
         return View();
     }
 

@@ -1,0 +1,79 @@
+﻿@model IEnumerable<eBookStore.Models.User>
+
+@{
+    ViewData["Title"] = "User Management";
+}
+
+@{
+    Layout = "../Shared/_AdminLayout.cshtml";  // Custom layout with absolute path
+}
+<style>
+    .user-heading{
+        margin-bottom:20px;
+    }
+
+    .create-user-btn{
+        margin: 20px 0px 20px 0px;
+    }
+</style>
+
+<h2 class="user-heading">User Management</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+@if (ViewBag.ErrorMessage != null)
+{
+    <p style="color: red;">@ViewBag.ErrorMessage</p>
+}
+
+<!-- Add New User Button -->
+<div class="mb-3">
+    <a asp-controller="Admin" asp-action="AddUser" class="btn btn-success create-user-btn">Add New User</a>
+</div>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            int count = 1;
+            foreach (var user in Model)
+            {
+                <tr>
+                    <td>@count</td>
+                    <td>@user.UserID</td> <!-- Adjust property names as per your model -->
+                    <td>@user.Name</td>
+                    <td>@user.Email</td>
+                    <td>@user.Role</td>
+                    <td>
+                    
+                    <form method="post" asp-action="DeleteUser" asp-controller="Admin" style="display:inline;">
+                        <input type="hidden" name="Email" value="@user.Email" />
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this user?');">Delete</button>
+                    </form>
+                    </td>
+                </tr>
+                count++;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center">No users found.</td>
+            </tr>
+        }
+    </tbody>
+</table>

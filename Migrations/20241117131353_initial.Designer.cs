@@ -12,8 +12,8 @@ using eBookStore.Models;
 namespace eBookStore.Migrations
 {
     [DbContext(typeof(AppDbContex))]
-    [Migration("20241117051129_addingPrimaryKey")]
-    partial class addingPrimaryKey
+    [Migration("20241117131353_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -119,10 +119,6 @@ namespace eBookStore.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserID"));
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -136,10 +132,6 @@ namespace eBookStore.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
