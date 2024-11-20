@@ -24,11 +24,9 @@
         <a class="navbar-brand" href="#">eBookStore</a>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-item nav-link" onclick="window.location.href='@Url.Action("Index", "Admin")'">Home</a>
-                <a class="nav-item nav-link" onclick="window.location.href='@Url.Action("Books", "Admin")'">Books</a>
-                <a class="nav-item nav-link" onclick="window.location.href='@Url.Action("Order", "Admin")'">Orders</a>
-                <a class="nav-item nav-link" onclick="window.location.href='@Url.Action("User", "Admin")'">Users</a>
-                <a class="nav-item nav-link" onclick="window.location.href='@Url.Action("Profile", "Admin")'">Profile</a>
+                <a class="nav-item nav-link" onclick="window.location.href='@Url.Action("Books", "Customer")'">Books</a>
+                <a class="nav-item nav-link" onclick="window.location.href='@Url.Action("Order", "Customer")'">Orders</a>
+                <a class="nav-item nav-link" onclick="window.location.href='@Url.Action("Profile", "Customer")'">Profile</a>
                 <button class="btn btn-danger nav-item nav-link logout-btn" onclick="window.location.href='@Url.Action("Logout", "Account")'">Logout</button>
             </div>
         </div>

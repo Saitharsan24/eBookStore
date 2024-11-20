@@ -12,6 +12,7 @@ builder.Services.AddDbContext<AppDbContex>(options =>
 
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IFeedBackService, FeedBackService>();
 
 
 builder.Services.AddDistributedMemoryCache(); // Required for session state

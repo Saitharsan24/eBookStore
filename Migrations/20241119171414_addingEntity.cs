@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace eBookStore.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class addingEntity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -35,7 +35,7 @@ namespace eBookStore.Migrations
                 {
                     FeedbackID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserID = table.Column<int>(type: "int", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BookID = table.Column<int>(type: "int", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -59,6 +59,19 @@ namespace eBookStore.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Order", x => x.OrderID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderBook",
+                columns: table => new
+                {
+                    OrderID = table.Column<int>(type: "int", nullable: false),
+                    BookID = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderBook", x => new { x.OrderID, x.BookID });
                 });
 
             migrationBuilder.CreateTable(
@@ -89,6 +102,9 @@ namespace eBookStore.Migrations
 
             migrationBuilder.DropTable(
                 name: "Order");
+
+            migrationBuilder.DropTable(
+                name: "OrderBook");
 
             migrationBuilder.DropTable(
                 name: "User");

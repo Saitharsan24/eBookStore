@@ -66,8 +66,8 @@ public class AppInitializer
             // Seed Feedback
             var feedbacks = new List<FeedBack>
             {
-                new FeedBack { UserID = users[0].UserID, BookID = books[0].BookID, Comment = "Amazing book! Highly recommend." },
-                new FeedBack { UserID = users[0].UserID, BookID = books[1].BookID, Comment = "Thought-provoking and very relevant." }
+                new FeedBack { UserName = users[0].Name, BookID = books[0].BookID, Comment = "Amazing book! Highly recommend." },
+                new FeedBack { UserName = users[0].Name, BookID = books[1].BookID, Comment = "Thought-provoking and very relevant." }
             };
             context.FeedBack.AddRange(feedbacks);
             context.SaveChanges();

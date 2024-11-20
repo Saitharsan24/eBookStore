@@ -1,0 +1,176 @@
+﻿@model eBookStore.Models.Book
+@{
+    Layout = "../Shared/_AdminLayout.cshtml";  // Custom layout with absolute path
+}
+
+<div class="view-container">
+    <h2>Book Details</h2>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <p style="color: red;">@ViewBag.ErrorMessage</p>
+    }
+
+    <form id="bookDetailsForm" asp-action="UpdateBook" method="post">
+        <input type="hidden" asp-for="BookID" />
+
+        <!-- Title -->
+        <div class="form-group">
+            <label asp-for="Title" class="form-label">Title</label>
+            <input asp-for="Title" class="form-control" readonly />
+        </div>
+
+        <!-- Author -->
+        <div class="form-group">
+            <label asp-for="Author" class="form-label">Author</label>
+            <input asp-for="Author" class="form-control" readonly />
+        </div>
+
+        <!-- Category -->
+        <div class="form-group">
+            <label asp-for="Category" class="form-label">Category</label>
+            <input asp-for="Category" class="form-control" readonly />
+        </div>
+
+        <!-- Price -->
+        <div class="form-group">
+            <label asp-for="Price" class="form-label">Price</label>
+            <input asp-for="Price" type="number" step="0.01" class="form-control" readonly />
+        </div>
+
+        <!-- Image URL -->
+        <div class="form-group">
+            <input asp-for="ImageURL" class="form-control" hidden/>
+        </div>
+
+        <!-- Stock -->
+        <div class="form-group">
+            <label asp-for="Stock" class="form-label">Stock</label>
+            <input asp-for="Stock" type="number" class="form-control" readonly />
+        </div>
+
+        <!-- Buttons -->
+        <div class="btn-group">
+            <button type="button" id="editButton" class="btn btn-edit">Edit</button>
+            <button type="submit" id="saveButton" class="btn btn-save" style="display: none;">Save</button>
+            <button type="button" id="cancelButton" class="btn btn-cancel" style="display: none;">Cancel</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    const editButton = document.getElementById("editButton");
+    const saveButton = document.getElementById("saveButton");
+    const cancelButton = document.getElementById("cancelButton");
+    const formInputs = document.querySelectorAll("#bookDetailsForm input");
+
+    editButton.addEventListener("click", () => {
+        formInputs.forEach(input => input.removeAttribute("readonly"));
+        editButton.style.display = "none";
+        saveButton.style.display = "inline-block";
+        cancelButton.style.display = "inline-block";
+    });
+
+    cancelButton.addEventListener("click", () => {
+        formInputs.forEach(input => input.setAttribute("readonly", true));
+        saveButton.style.display = "none";
+        cancelButton.style.display = "none";
+        editButton.style.display = "inline-block";
+    });
+</script>
+
+<style>
+    .view-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    .img-preview {
+        width: 100%;
+        max-height: 200px;
+        object-fit: contain;
+        border: 1px solid #ccc;
+        margin-top: 10px;
+    }
+
+    .btn-group {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    .btn-edit {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .btn-edit:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-save {
+        background-color: #28a745;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .btn-save:hover {
+        background-color: #218838;
+    }
+
+    .btn-cancel {
+        background-color: #dc3545;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .btn-cancel:hover {
+        background-color: #c82333;
+    }
+</style>

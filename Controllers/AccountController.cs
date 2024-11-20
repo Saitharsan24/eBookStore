@@ -34,15 +34,16 @@ namespace eBookStore.Controllers
                 HttpContext.Session.SetString("UserEmail", user.Email);
                 HttpContext.Session.SetString("UserName", user.Name);
                 HttpContext.Session.SetString("UserRole", user.Role);
+                HttpContext.Session.SetString("UserID", user.UserID.ToString());
 
                 // Redirect based on user role
                 if (user.Role == "Admin")
                 {
                     return RedirectToAction("Index", "Admin");
                 }
-                else if (user.Role == "User")
+                else if (user.Role == "Customer")
                 {
-                    return RedirectToAction("Index", "User");
+                    return RedirectToAction("Books", "Customer");
                 }
             }
 
@@ -73,6 +74,13 @@ namespace eBookStore.Controllers
             return RedirectToAction("Login"); // Redirect to Login after successful signup.
         }
 
+        [HttpGet]
+        public IActionResult Logout()
+        {
+            // Clear session on logout
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login");
+        }
 
     }
 }

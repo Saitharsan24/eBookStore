@@ -25,7 +25,7 @@ public class BookService(AppDbContex context) : IBookService
         try
         {
             var data = this.GetBookById(id);
-            if (data != null)
+            if (data == null)
             {
                 return false;
             }

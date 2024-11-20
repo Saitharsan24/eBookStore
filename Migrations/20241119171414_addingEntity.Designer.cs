@@ -12,8 +12,8 @@ using eBookStore.Models;
 namespace eBookStore.Migrations
 {
     [DbContext(typeof(AppDbContex))]
-    [Migration("20241117131353_initial")]
-    partial class initial
+    [Migration("20241119171414_addingEntity")]
+    partial class addingEntity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -75,8 +75,9 @@ namespace eBookStore.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserID")
-                        .HasColumnType("int");
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("FeedbackID");
 
@@ -109,6 +110,22 @@ namespace eBookStore.Migrations
                     b.HasKey("OrderID");
 
                     b.ToTable("Order");
+                });
+
+            modelBuilder.Entity("eBookStore.Models.OrderBook", b =>
+                {
+                    b.Property<int>("OrderID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BookID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("OrderID", "BookID");
+
+                    b.ToTable("OrderBook");
                 });
 
             modelBuilder.Entity("eBookStore.Models.User", b =>

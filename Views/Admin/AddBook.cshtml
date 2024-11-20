@@ -1,0 +1,60 @@
+﻿@model eBookStore.Models.Book
+
+@{
+    Layout = "../Shared/_AdminLayout.cshtml";  // Custom layout with absolute path
+}
+
+<style>
+    .form-group{
+        margin-bottom:30px;
+    }
+
+    h2{
+        margin-bottom:30px;
+    }
+
+</style>
+
+<h2>Add New Book</h2>
+
+<form method="post" asp-action="AddBook" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="Title">Title</label>
+        <input type="text" id="Title" name="Title" class="form-control" required />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Author">Author</label>
+        <input type="text" id="Author" name="Author" class="form-control" required />
+        <span asp-validation-for="Author" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Category">Category</label>
+        <input type="text" id="Category" name="Category" class="form-control" required />
+        <span asp-validation-for="Category" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Price">Price</label>
+        <input type="number" id="Price" name="Price" class="form-control" step="0.01" required />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <input type="text" id="ImageURL" name="ImageURL" value="Test" class="form-control" hidden/>
+        <span asp-validation-for="ImageURL" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Stock">Stock</label>
+        <input type="number" id="Stock" name="Stock" class="form-control" required />
+        <span asp-validation-for="Stock" class="text-danger"></span>
+    </div>
+
+    <div class="btn-group">
+        <button type="submit" class="btn btn-success">Save</button>
+        <a href="@Url.Action("Books", "Admin")" class="btn btn-danger">Cancel</a>
+    </div>
+</form>

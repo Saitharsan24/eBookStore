@@ -1,0 +1,48 @@
+﻿@model eBookStore.Models.User
+@{
+    Layout = "../Shared/_AdminLayout.cshtml";  // Custom layout with absolute path
+}
+
+<style>
+    .form-group-btn {
+        margin-top: 30px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+</style>
+
+<h2>Add User</h2>
+
+<form method="post" asp-action="AddUser" asp-controller="Admin">
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Email" class="control-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Role" class="control-label"></label>
+        <select asp-for="Role" class="form-control">
+            <option value="">-- Select Role --</option>
+            <option value="Customer">Customer</option>
+            <option value="Admin">Admin</option>
+        </select>
+        <span asp-validation-for="Role" class="text-danger"></span>
+    </div>
+
+    <input type="hidden" asp-for="Password" value="123" />
+
+    <button type="submit" class="btn btn-primary form-group-btn">Add User</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

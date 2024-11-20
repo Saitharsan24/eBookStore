@@ -1,0 +1,90 @@
+﻿@model eBookStore.Models.BookViewModel
+@{
+    Layout = "../Shared/_CustomerLayout.cshtml";  // Custom layout with absolute path
+}
+
+
+<style>
+    h2 {
+        color: Black;
+        font-size: 50px;
+        margin-bottom: 30px;
+    }
+
+    .buy-btn {
+        background-color: #28a745;
+        color: white;
+        padding: 10px;
+        border: none;
+        cursor: pointer;
+        width: 40%;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+        .buy-btn:hover {
+            background-color: #218838;
+        }
+</style>
+
+<h2>@Model.Title</h2>
+
+<div style="display: flex; gap: 30px; margin-top: 20px;">
+    <!-- Book Details -->
+    <div style="width: 50%;">
+        <img src="@Model.ImageURL" alt="@Model.Title" style="width: 100%; height: auto;" />
+        <p><strong>Author:</strong> @Model.Author</p>
+        <p><strong>Category:</strong> @Model.Category</p>
+        <p><strong>Price:</strong> $@Model.Price</p>
+        <p><strong>Stock:</strong> @Model.Stock</p>
+
+        <!-- Quantity Selector -->
+        <div style="margin: 20px 0px 20px 0px;">
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" value="1" min="1" max="@Model.Stock" style="width: 50px; margin-left: 10px;" />
+        </div>
+
+        <!-- Add to Cart Button -->
+        <button class="btn buy-btn" style="margin-top: 10px;"
+                onclick="window.location.href='@Url.Action("AddToCart", "Customer", new { id = Model.BookID, quantity = 1 })'">
+            Add to Cart
+        </button>
+    </div>
+
+    <!-- Feedback Section -->
+    <div style="width: 50%;">
+        <h3>Feedback</h3>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div style="color: green; margin-top: 10px;">@TempData["SuccessMessage"]</div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div style="color: red; margin-top: 10px;">@TempData["ErrorMessage"]</div>
+        }
+
+        @if (Model.FeedBacks != null && Model.FeedBacks.Any())
+        {
+            foreach (var feedback in Model.FeedBacks)
+            {
+                <div style="border-bottom: 1px solid #ddd; margin-bottom: 10px; padding-bottom: 10px;">
+                    <p><strong>@feedback.UserName</strong></p>
+                    <p>@feedback.Comment</p>
+                </div>
+            }
+        }
+        else
+        {
+            <p>No feedback available.</p>
+        }
+
+        <!-- Add Feedback -->
+        <h4 style="margin: 20px 0px 20px 0px">Add Your Feedback</h4>
+
+        <form method="post" action="@Url.Action("AddFeedback", "Customer", new { id = Model.BookID })">
+            <textarea name="comment" placeholder="Write your comment here..." style="width: 100%; height: 100px; margin: 20px 0px 20px 0px;"></textarea>
+            <button type="submit" class="btn buy-btn" style="margin-top: 10px;">Submit Feedback</button>
+        </form>
+    </div>
+</div>
