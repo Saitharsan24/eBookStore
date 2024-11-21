@@ -2,11 +2,11 @@
 
 namespace eBookStore.Models;
 
-public class AppDbContex : DbContext
+public class AppDbContext : DbContext
 {
-    public AppDbContex(DbContextOptions<AppDbContex> options) : base(options)
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
-
+        Database.EnsureCreated();
     }
 
     public DbSet<Book> Book { get; set; }
@@ -14,7 +14,7 @@ public class AppDbContex : DbContext
     public DbSet<FeedBack> FeedBack { get; set; }
     public DbSet<User> User { get; set; }
     public DbSet<OrderBook> OrderBook { get; set; }
-    public DbSet<Cart> Carts { get; set; }
+    public DbSet<Cart> Cart { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

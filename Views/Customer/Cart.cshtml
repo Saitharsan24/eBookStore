@@ -1,0 +1,54 @@
+﻿@model IEnumerable<eBookStore.Models.Cart>
+@{
+    Layout = "../Shared/_CustomerLayout.cshtml"; // Custom layout with absolute path
+}
+
+<h2>Your Cart</h2>
+
+@if (!Model.Any())
+{
+    <p>Your cart is empty!</p>
+}
+else
+{
+    <table class="table table-striped" style="margin-top: 20px;">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <img src="@item.ImageURL" alt="@item.Title" style="width: 50px; height: auto;" />
+                    </td>
+                    <td>@item.Title</td>
+                    <td>@item.Author</td>
+                    <td>$@item.Price</td>
+                    <td>@item.Quantity</td>
+                    <td>$@(item.Price * item.Quantity)</td>
+                    <td>
+                        <form method="post" action="@Url.Action("RemoveFromCart", "Customer")" style="display: inline;">
+                            <input type="hidden" name="bookId" value="@item.BookID" />
+                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div style="margin-top: 20px; text-align: right;">
+        <form method="post" action="@Url.Action("PlaceOrder", "Customer")">
+            <button type="submit" class="btn btn-success btn-lg">Place Order</button>
+        </form>
+    </div>
+}

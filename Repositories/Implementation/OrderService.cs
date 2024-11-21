@@ -3,7 +3,7 @@ using eBookStore.Repositories.Abstract;
 
 namespace eBookStore.Repositories.Implementation;
 
-public class OrderService(AppDbContex context) : IOrderService
+public class OrderService(AppDbContext context) : IOrderService
 {
     public bool AddOrder(Order order)
     {
@@ -70,4 +70,5 @@ public class OrderService(AppDbContex context) : IOrderService
             return false;
         }
     }
+
 }

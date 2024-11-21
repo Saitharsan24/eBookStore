@@ -3,7 +3,7 @@ using eBookStore.Repositories.Abstract;
 
 namespace eBookStore.Repositories.Implementation;
 
-public class FeedBackService(AppDbContex context) : IFeedBackService
+public class FeedBackService(AppDbContext context) : IFeedBackService
 {
     public bool AddFeedBack(FeedBack feedBack)
     {

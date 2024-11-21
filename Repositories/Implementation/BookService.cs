@@ -3,7 +3,7 @@ using eBookStore.Repositories.Abstract;
 
 namespace eBookStore.Repositories.Implementation;
 
-public class BookService(AppDbContex context) : IBookService
+public class BookService(AppDbContext context) : IBookService
 {
     public bool AddBook(Book book)
     {

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>eBookStore</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
         .container{
             width:100%;
@@ -27,6 +28,9 @@
                 <a class="nav-item nav-link" onclick="window.location.href='@Url.Action("Books", "Customer")'">Books</a>
                 <a class="nav-item nav-link" onclick="window.location.href='@Url.Action("Order", "Customer")'">Orders</a>
                 <a class="nav-item nav-link" onclick="window.location.href='@Url.Action("Profile", "Customer")'">Profile</a>
+                <a class="nav-item nav-link" onclick="window.location.href='@Url.Action("Cart", "Customer")'">
+                    <i class="fa fa-shopping-cart" style="margin-right: 5px;"></i> 
+                </a>
                 <button class="btn btn-danger nav-item nav-link logout-btn" onclick="window.location.href='@Url.Action("Logout", "Account")'">Logout</button>
             </div>
         </div>

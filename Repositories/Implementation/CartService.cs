@@ -3,8 +3,29 @@ using eBookStore.Repositories.Abstract;
 
 namespace eBookStore.Repositories.Implementation;
 
-public class CartService(AppDbContex context) : ICartService
+public class CartService(AppDbContext context) : ICartService
 {
+    public Cart GetCartById(int BookId, int Userid)
+    {
+        var cart = context.Cart.FirstOrDefault(x => x.UserID == Userid && x.BookID == BookId);
+        return cart;
+    }
+
+    public bool UpdateCart(Cart cart)
+    {
+        try
+        {
+            context.Cart.Update(cart);
+            context.SaveChanges();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+            return false;
+        }
+    }
+
     bool ICartService.AddToCart(Cart cart)
     {
         try
@@ -27,6 +48,6 @@ public class CartService(AppDbContex context) : ICartService
 
     IEnumerable<Cart> ICartService.GetCartItemByUser(int id)
     {
-        throw new NotImplementedException();
+        return context.Cart.Where(x => x.UserID == id);
     }
 }

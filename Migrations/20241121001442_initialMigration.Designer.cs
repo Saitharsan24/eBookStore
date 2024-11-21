@@ -11,9 +11,9 @@ using eBookStore.Models;
 
 namespace eBookStore.Migrations
 {
-    [DbContext(typeof(AppDbContex))]
-    [Migration("20241119171414_addingEntity")]
-    partial class addingEntity
+    [DbContext(typeof(AppDbContext))]
+    [Migration("20241121001442_initialMigration")]
+    partial class initialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -60,6 +60,37 @@ namespace eBookStore.Migrations
                     b.ToTable("Book");
                 });
 
+            modelBuilder.Entity("eBookStore.Models.Cart", b =>
+                {
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BookID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Author")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageURL")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserID", "BookID");
+
+                    b.ToTable("Cart");
+                });
+
             modelBuilder.Entity("eBookStore.Models.FeedBack", b =>
                 {
                     b.Property<int>("FeedbackID")
@@ -92,20 +123,18 @@ namespace eBookStore.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderID"));
 
-                    b.Property<int>("BookID")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("UserID")
                         .HasColumnType("int");
+
+                    b.Property<string>("status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("OrderID");
 

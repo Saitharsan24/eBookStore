@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace eBookStore.Repositories.Implementation;
 
-public class UserService(AppDbContex context) : IUserService
+public class UserService(AppDbContext context) : IUserService
 {
     public bool AddUser(User user)
     {

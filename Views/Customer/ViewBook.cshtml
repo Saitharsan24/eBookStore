@@ -27,9 +27,17 @@
         }
 </style>
 
-<h2>@Model.Title</h2>
+@if (TempData["BookSuccessMessage"] != null)
+{
+    <div style="color: green; margin-top: 10px;">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["BookErrorMessage"] != null)
+{
+    <div style="color: red; margin-top: 10px;">@TempData["ErrorMessage"]</div>
+}
 
-<div style="display: flex; gap: 30px; margin-top: 20px;">
+    <h2 style="margin-bottom:30px">@Model.Title</h2>
+<div style="display:flex; flex-direction:row">
     <!-- Book Details -->
     <div style="width: 50%;">
         <img src="@Model.ImageURL" alt="@Model.Title" style="width: 100%; height: auto;" />
@@ -45,8 +53,7 @@
         </div>
 
         <!-- Add to Cart Button -->
-        <button class="btn buy-btn" style="margin-top: 10px;"
-                onclick="window.location.href='@Url.Action("AddToCart", "Customer", new { id = Model.BookID, quantity = 1 })'">
+        <button class="btn buy-btn" style="margin-top: 10px;" onclick="addToCart(@Model.BookID)">
             Add to Cart
         </button>
     </div>
@@ -88,3 +95,13 @@
         </form>
     </div>
 </div>
+
+<script>
+    function addToCart(bookId) {
+        // Get the selected quantity
+        const quantity = document.getElementById('quantity').value;
+
+        // Redirect to the AddToCart action with the bookId and quantity
+        window.location.href = `@Url.Action("AddToCart", "Customer")?id=${bookId}&quantity=${quantity}`;
+    }
+</script>
