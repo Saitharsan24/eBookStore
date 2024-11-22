@@ -50,11 +50,11 @@ public class CustomerController(IOrderBookService orderBookService, IOrderServic
         if (update)
         {
             TempData["SuccessMessage"] = "Profile updated successfully!";
-            return View("Profile", user);
+            return RedirectToAction("Profile", "Customer");
         }
 
         ViewBag.ErrorMessage = "Error occured please try again !";
-        return View("Profile");
+        return RedirectToAction("ViewOrder", "Customer");
     }
 
     public IActionResult ViewBook(int id)
@@ -117,16 +117,16 @@ public class CustomerController(IOrderBookService orderBookService, IOrderServic
 
         if (cartItem != null)
         {
-            cartItem.Quantity = quantity;
+            cartItem.Quantity += quantity;
             var results = cartService.UpdateCart(cartItem);
             if (results)
             {
-                TempData["BookSuccessMessage"] = "Item added to cart successfully!";
-                return RedirectToAction("ViewBook", new { BookID });
+                TempData["CartSuccessMessage"] = "Item added to cart successfully!";
+                return RedirectToAction("ViewBook", new { id = BookID });
             }
 
-            TempData["BookErrorMessage"] = "Error occurred ! Try again.";
-            return RedirectToAction("ViewBook", new { BookID });
+            TempData["CartErrorMessage"] = "Error occurred ! Try again.";
+            return RedirectToAction("ViewBook", new { id = BookID });
         }
 
         Cart cart = new Cart();
@@ -142,12 +142,12 @@ public class CustomerController(IOrderBookService orderBookService, IOrderServic
 
         if (result)
         {
-            TempData["BookSuccessMessage"] = "Item added to cart successfully!";
-            return RedirectToAction("ViewBook", new { BookID });
+            TempData["CartSuccessMessage"] = "Item added to cart successfully!";
+            return RedirectToAction("ViewBook", new { id = BookID });
         }
 
-        TempData["BookErrorMessage"] = "Error occurred ! Try again.";
-        return RedirectToAction("ViewBook", new { BookID });
+        TempData["CartErrorMessage"] = "Error occurred ! Try again.";
+        return RedirectToAction("ViewBook", new { id = BookID });
     }
 
     public IActionResult Cart()
@@ -156,6 +156,19 @@ public class CustomerController(IOrderBookService orderBookService, IOrderServic
         var cartTtems = cartService.GetCartItemByUser(intuserId);
 
         return View(cartTtems);
+    }
+
+    public IActionResult RemoveFromCart(int BookID, int UserID)
+    {
+        var results = cartService.DeleteCartById(BookID, UserID);
+        if (results)
+        {
+            TempData["SuccessMessage"] = "Item removed successfully!";
+            return RedirectToAction("Cart");
+        }
+
+        TempData["ErrorMessage"] = "Error occurred! Try Again.";
+        return RedirectToAction("Cart");
     }
 
     public IActionResult Order()
@@ -202,12 +215,67 @@ public class CustomerController(IOrderBookService orderBookService, IOrderServic
 
         if (resutls)
         {
-            TempData["BookSuccessMessage"] = "Order cancelled successfully!";
+            TempData["CancelSuccessMessage"] = "Order cancelled successfully!";
             return RedirectToAction("ViewOrder", new { OrderID });
         }
 
-        TempData["BookErrorMessage"] = "Error occurred ! Try again.";
+        TempData["CancelErrorMessage"] = "Error occurred ! Try again.";
         return RedirectToAction("ViewOrder", new { OrderID });
 
+    }
+
+    public IActionResult PlaceOrder()
+    {
+        var userID = HttpContext.Session.GetString("UserID");
+        var id = int.TryParse(userID, out int intuserId);
+
+        var allCartItem = cartService.GetCartItemByUser(intuserId);
+        decimal Total = 0;
+
+        if (allCartItem != null)
+        {
+            foreach (var item in allCartItem)
+            {
+                Total += item.Quantity * item.Price;
+            }
+        }
+        else
+        {
+            TempData["ErrorMessage"] = "No item in the cart !";
+            return RedirectToAction("Order", "Customer");
+        }
+
+        Order order = new Order();
+        order.OrderDate = DateTime.Now;
+        order.UserID = intuserId;
+        order.status = "Pending";
+        order.TotalPrice = Total;
+
+        var results = orderService.AddOrder(order);
+
+        List<OrderBook> orderBookList = new List<OrderBook>();
+
+        if (results != 0)
+        {
+            foreach (var item in allCartItem)
+            {
+                OrderBook orderBook = new OrderBook();
+                orderBook.OrderID = results;
+                orderBook.Quantity = item.Quantity;
+                orderBook.BookID = item.BookID;
+
+                orderBookList.Add(orderBook);
+            }
+
+            var result = orderBookService.AddOrderBook(orderBookList);
+            if (result)
+            {
+                TempData["SuccessMessage"] = "Order placed successfully!";
+                return RedirectToAction("Order", "Customer");
+            }
+
+        }
+        TempData["ErrorMessage"] = "Error occurred ! Try again.";
+        return RedirectToAction("Order", "Customer");
     }
 }

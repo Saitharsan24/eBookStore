@@ -27,16 +27,18 @@
         }
 </style>
 
-@if (TempData["BookSuccessMessage"] != null)
+    <h2 style="margin-bottom:30px">@Model.Title</h2>
+
+@if (TempData["CartSuccessMessage"] != null)
 {
-    <div style="color: green; margin-top: 10px;">@TempData["SuccessMessage"]</div>
+    <div style="color: green; margin-top: 10px; margin-bottom: 20px;">@TempData["CartSuccessMessage"]</div>
 }
-@if (TempData["BookErrorMessage"] != null)
+@if (TempData["CartErrorMessage"] != null)
 {
-    <div style="color: red; margin-top: 10px;">@TempData["ErrorMessage"]</div>
+    <div style="color: red; margin-top: 10px; margin-bottom: 20px;">@TempData["CartErrorMessage"]</div>
 }
 
-    <h2 style="margin-bottom:30px">@Model.Title</h2>
+
 <div style="display:flex; flex-direction:row">
     <!-- Book Details -->
     <div style="width: 50%;">
@@ -46,16 +48,18 @@
         <p><strong>Price:</strong> $@Model.Price</p>
         <p><strong>Stock:</strong> @Model.Stock</p>
 
-        <!-- Quantity Selector -->
-        <div style="margin: 20px 0px 20px 0px;">
-            <label for="quantity">Quantity:</label>
-            <input type="number" id="quantity" name="quantity" value="1" min="1" max="@Model.Stock" style="width: 50px; margin-left: 10px;" />
-        </div>
+        <form method="post" action="@Url.Action("AddToCart", "Customer", new { BookID = Model.BookID})">
+            <!-- Quantity Selector -->
+            <div style="margin: 20px 0px 20px 0px;">
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" name="quantity" value="1" min="1" max="@Model.Stock" style="width: 50px; margin-left: 10px;" />
+            </div>
 
-        <!-- Add to Cart Button -->
-        <button class="btn buy-btn" style="margin-top: 10px;" onclick="addToCart(@Model.BookID)">
-            Add to Cart
-        </button>
+            <!-- Add to Cart Button -->
+            <button class="btn buy-btn" style="margin-top: 10px;">
+                Add to Cart
+            </button>
+        </form>
     </div>
 
     <!-- Feedback Section -->

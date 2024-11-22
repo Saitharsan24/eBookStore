@@ -5,18 +5,18 @@ namespace eBookStore.Repositories.Implementation;
 
 public class OrderService(AppDbContext context) : IOrderService
 {
-    public bool AddOrder(Order order)
+    public int AddOrder(Order order)
     {
         try
         {
             context.Add(order);
             context.SaveChanges();
-            return true;
+            return order.OrderID;
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.ToString());
-            return false;
+            return 0;
         }
     }
 

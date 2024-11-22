@@ -5,16 +5,16 @@
 
 <h2 style="margin-bottom:30px">Order Details</h2>
 
-@if (TempData["SuccessMessage"] != null)
+@if (TempData["CancelSuccessMessage"] != null)
 {
     <div class="alert alert-success">
-        @TempData["SuccessMessage"]
+        @TempData["CancelSuccessMessage"]
     </div>
 }
-@if (TempData["BookErrorMessage"] != null)
+@if (TempData["CancelErrorMessage"] != null)
 {
     <div class="alert alert-success">
-        @TempData["BookErrorMessage"]
+        @TempData["CancelErrorMessage"]
     </div>
 }
 

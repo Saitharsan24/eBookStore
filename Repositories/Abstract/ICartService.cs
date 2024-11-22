@@ -9,4 +9,5 @@ public interface ICartService
     IEnumerable<Cart> GetCartItemByUser(int id);
     Cart GetCartById(int BookId, int Userid);
     bool UpdateCart(Cart cart);
+    bool DeleteCartById(int BookID, int UserID);
 }

@@ -5,6 +5,15 @@
 
 <h2>Your Cart</h2>
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div style="color: green; margin-top: 10px; margin-bottom: 20px;">@TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div style="color: red; margin-top: 10px; margin-bottom: 20px;">@TempData["ErrorMessage"]</div>
+}
+
 @if (!Model.Any())
 {
     <p>Your cart is empty!</p>
@@ -36,9 +45,11 @@ else
                     <td>@item.Quantity</td>
                     <td>$@(item.Price * item.Quantity)</td>
                     <td>
-                        <form method="post" action="@Url.Action("RemoveFromCart", "Customer")" style="display: inline;">
-                            <input type="hidden" name="bookId" value="@item.BookID" />
-                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                        <form method="post" action="@Url.Action("RemoveFromCart", "Customer",new {BookID = item.BookID, UserID = item.UserID})" style="display: inline;">
+                            <button type="submit"
+                                onclick="return confirm('Are you sure you want to remove the item');"
+                                class="btn btn-danger btn-sm"
+                            >Remove</button>
                         </form>
                     </td>
                 </tr>
