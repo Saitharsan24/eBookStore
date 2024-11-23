@@ -27,5 +27,11 @@ public class OrderBookService(AppDbContext context) : IOrderBookService
         var orderBooks = context.OrderBook.Where(x => x.OrderID == OrderID);
         return orderBooks;
     }
+
+    IEnumerable<OrderBook> IOrderBookService.GetAllOrderBooks()
+    {
+        var orderBooks = context.OrderBook.ToList();
+        return orderBooks;
+    }
 }
 

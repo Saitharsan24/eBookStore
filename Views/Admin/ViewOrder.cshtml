@@ -1,0 +1,119 @@
+﻿@model eBookStore.Models.OrderViewModel
+@{
+    Layout = "../Shared/_AdminLayout.cshtml";
+}
+
+<h2 style="margin-bottom:30px">Order Details</h2>
+
+@if (TempData["CancelSuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["CancelSuccessMessage"]
+    </div>
+}
+@if (TempData["CancelErrorMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["CancelErrorMessage"]
+    </div>
+}
+
+<div class="order-details">
+    <p><strong>Order ID:</strong> @Model.OrderId</p>
+    <p><strong>Order Date:</strong> @Model.OrderDate.ToString("yyyy-MM-dd")</p>
+    <p><strong>Total Price:</strong> $@Model.TotalPrice</p>
+
+    <div class="order-status">
+        <strong>Status:</strong>
+        @if (Model.status == "Pending")
+        {
+            <span style="color: orange;">
+                <i class="fas fa-clock"></i> Pending
+            </span>
+        }
+        else if (Model.status == "Cancelled")
+        {
+            <span style="color: red;">
+                <i class="fas fa-times-circle"></i> Cancelled
+            </span>
+        }
+        else if (Model.status == "Completed")
+        {
+            <span style="color: green;">
+                <i class="fas fa-check-circle"></i> Completed
+            </span>
+        }
+        else if (Model.status == "Shipped")
+        {
+            <span style="color: blue;">
+                <i class="fas fa-truck"></i> Shipped
+            </span>
+        }
+    </div>
+
+    @if (Model.status == "Pending")
+    {
+        <form method="post" action="@Url.Action("CancelOrder", "Admin", new {orderId = Model.OrderId})" style="display:inline;">
+            <button type="submit" class="btn btn-danger"
+                    style="margin-top: 20px;"
+                    onclick="return confirm('Are you sure you want to Cancel the order');">
+                Cancel Order
+            </button>
+        </form>
+    }
+
+    @if (Model.status == "Pending")
+    {
+        <form method="post" action="@Url.Action("ShipOrder", "Admin", new { orderId = Model.OrderId })" style="display:inline; margin-left: 20px">
+            <button type="submit" class="btn btn-primary"
+                style="margin-top: 20px; background-color: blue; border-color: blue;">
+            Ship Order
+        </button>
+    </form>
+    }
+
+    @if (Model.status == "Shipped")
+    {
+        <form method="post" action="@Url.Action("CompleteOrder", "Admin", new { orderId = Model.OrderId })
+        " style="display:inline; margin-left: 20px">
+            <button type="submit" class="btn btn-primary"
+                style="margin-top: 20px; background-color: green; border-color: green;">
+            Complete Order
+        </button>
+    </form>
+    }
+
+    <h3 style="margin-top: 30px;">Ordered Books</h3>
+    @if (Model.OrderedBooks != null && Model.OrderedBooks.Any())
+    {
+        <table class="table table-striped" style="margin-top: 20px;">
+            <thead>
+                <tr>
+                    <th>Book Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.OrderedBooks)
+                {
+                    <tr>
+                        <td>@Model.Books[item.BookID].Title</td>
+                        <td>$@Model.Books[item.BookID].Price</td>
+                        <td>@item.Quantity</td>
+                        <td>$@(item.Quantity * @Model.Books[item.BookID].Price)</td>
+                    </tr>
+                }
+                <tr>
+                    <td colspan="3" class="text-right"><strong>Grand Total</strong></td>
+                    <td><strong>$@Model.TotalPrice</strong></td>
+                </tr>
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No books found in the order.</p>
+    }
+</div>

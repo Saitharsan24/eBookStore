@@ -53,6 +53,11 @@ public class UserService(AppDbContext context) : IUserService
         return context.User.FirstOrDefault(x => x.Email == email);
     }
 
+    public User GetUserById(int ID)
+    {
+        return context.User.Find(ID);
+    }
+
     public bool UpdateUser(User user)
     {
         try

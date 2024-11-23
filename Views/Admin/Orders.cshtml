@@ -1,0 +1,52 @@
+﻿@model IEnumerable<eBookStore.Models.Order>
+@{
+    Layout = "../Shared/_AdminLayout.cshtml";  // Custom layout
+}
+
+@{
+    ViewData["Title"] = "Orders";
+}
+
+<h2 style="margin-top:"30px">Orders</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Order ID</th>
+            <th>Customer Name</th>
+            <th>Order Date</th>
+            <th>Total Amount</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            int index = 1;
+            foreach (var order in Model)
+            {
+                <tr>
+                    <td>@index</td>
+                    <td>@order.OrderID</td>
+                    <td>@order.status</td>
+                    <td>@order.OrderDate.ToString("yyyy-MM-dd")</td>
+                    <td>@order.TotalPrice.ToString("C")</td>
+                    <td>
+                        <form method="get" action="@Url.Action("ViewOrder", "Admin")" style="display: inline;">
+                            <input type="hidden" name="orderId" value="@order.OrderID" />
+                            <button type="submit" class="btn btn-primary btn-sm">View Order</button>
+                        </form>
+                    </td>
+                </tr>
+                index++;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6" class="text-center">No orders available.</td>
+            </tr>
+        }
+    </tbody>
+</table>

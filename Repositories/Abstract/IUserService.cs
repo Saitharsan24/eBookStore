@@ -8,5 +8,6 @@ public interface IUserService
     bool UpdateUser(User user);
     bool DeleteUser(string email);
     User GetUserById(string email);
+    User GetUserById(int ID);
     IEnumerable<User> GetAllUsers();
 }

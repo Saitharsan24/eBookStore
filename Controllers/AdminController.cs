@@ -1,10 +1,12 @@
 ﻿using eBookStore.Models;
 using eBookStore.Repositories.Abstract;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
+using System.Text;
 
 namespace eBookStore.Controllers;
 
-public class AdminController(IUserService service, IBookService bookService) : Controller
+public class AdminController(IOrderBookService orderBookService, IOrderService orderService, IUserService service, IBookService bookService) : Controller
 {
     public IActionResult Index()
     {
@@ -87,11 +89,11 @@ public class AdminController(IUserService service, IBookService bookService) : C
         if (deleteUser)
         {
             TempData["SuccessMessage"] = "User delted successfully!";
-            return this.User();
+            return RedirectToAction("User");
         }
 
         ViewBag.ErrorMessage = "Error occured please try again !";
-        return View("User");
+        return RedirectToAction("User");
     }
 
     public IActionResult AddUser()
@@ -111,7 +113,7 @@ public class AdminController(IUserService service, IBookService bookService) : C
                 if (emailExists.Email == user.Email)
                 {
                     ViewBag.ErrorMessage = "Email already exists. Please use a different email.";
-                    return View("User"); // Return the same view with the error message
+                    return RedirectToAction("User"); // Return the same view with the error message
                 }
             }
 
@@ -129,7 +131,7 @@ public class AdminController(IUserService service, IBookService bookService) : C
             }
 
             ViewBag.ErrorMessage = "Something went wrong! Try again.";
-            return View("User");
+            return RedirectToAction("User");
         }
         else
         {
@@ -189,19 +191,19 @@ public class AdminController(IUserService service, IBookService bookService) : C
     {
         if (id == null)
         {
-            return View("Index");
+            return RedirectToAction("Index");
         }
 
         var deleteBook = bookService.DeleteBook(id);
 
         if (deleteBook)
         {
-            TempData["SuccessMessage"] = "Book delted successfully!";
-            return View("Books");
+            TempData["SuccessMessage"] = "Book deleted successfully!";
+            return RedirectToAction("Books");
         }
 
         ViewBag.ErrorMessage = "Error occured please try again !";
-        return View("Books");
+        return RedirectToAction("Books");
     }
 
     [HttpGet]
@@ -230,14 +232,193 @@ public class AdminController(IUserService service, IBookService bookService) : C
             }
 
             ViewBag.ErrorMessage = "Something went wrong! Try again.";
-            return View("Books");
+            return RedirectToAction("Books");
         }
         else
         {
             // If ModelState is invalid
             ViewBag.ErrorMessage = "Invalid data. Please check the fields and try again.";
-            return View("books"); // Return the same view with validation errors
+            return RedirectToAction("books"); // Return the same view with validation errors
         }
+    }
+
+    public IActionResult Orders()
+    {
+        var orders = orderService.GetAllOrders();
+
+        return View(orders);
+    }
+
+    public IActionResult ViewOrder(int OrderID)
+    {
+        var orders = orderService.GetOrderById(OrderID);
+        var user = service.GetUserById(orders.OrderID);
+        var orderBooks = orderBookService.GetOrderBooks(OrderID);
+
+        OrderViewModel orderViewModel = new OrderViewModel();
+
+        orderViewModel.user = user;
+        orderViewModel.OrderDate = orders.OrderDate;
+        orderViewModel.OrderId = orders.OrderID;
+        orderViewModel.TotalPrice = orders.TotalPrice;
+        orderViewModel.status = orders.status;
+        orderViewModel.OrderedBooks = orderBooks;
+
+        List<Book> books = new List<Book>();
+
+        foreach (var book in orderBooks)
+        {
+            var bookObject = bookService.GetBookById(book.BookID);
+            books.Add(bookObject);
+        }
+
+        var booksDictionary = books.ToDictionary(book => book.BookID);
+        orderViewModel.Books = booksDictionary;
+
+        return View(orderViewModel);
+    }
+
+    public IActionResult ShipOrder(int OrderID)
+    {
+        var order = orderService.GetOrderById(OrderID);
+        order.status = "Shipped";
+
+        var resutls = orderService.UpdateOrder(order);
+
+        if (resutls)
+        {
+            TempData["CancelSuccessMessage"] = "Order Shipped successfully!";
+            return RedirectToAction("ViewOrder", new { OrderID });
+        }
+
+        TempData["CancelErrorMessage"] = "Error occurred ! Try again.";
+        return RedirectToAction("ViewOrder", new { OrderID });
+
+    }
+
+    public IActionResult CompleteOrder(int OrderID)
+    {
+        var order = orderService.GetOrderById(OrderID);
+        order.status = "Completed";
+
+        var resutls = orderService.UpdateOrder(order);
+
+        if (resutls)
+        {
+            TempData["CancelSuccessMessage"] = "Order Completed successfully!";
+            return RedirectToAction("ViewOrder", new { OrderID });
+        }
+
+        TempData["CancelErrorMessage"] = "Error occurred ! Try again.";
+        return RedirectToAction("ViewOrder", new { OrderID });
+
+    }
+
+    public IActionResult CancelOrder(int OrderID)
+    {
+        var order = orderService.GetOrderById(OrderID);
+        order.status = "Cancelled";
+
+        var resutls = orderService.UpdateOrder(order);
+
+        if (resutls)
+        {
+            TempData["CancelSuccessMessage"] = "Order cancelled successfully!";
+            return RedirectToAction("ViewOrder", new { OrderID });
+        }
+
+        TempData["CancelErrorMessage"] = "Error occurred ! Try again.";
+        return RedirectToAction("ViewOrder", new { OrderID });
+
+    }
+
+    public IActionResult Reports()
+    {
+        return View();
+    }
+
+    public IActionResult GenerateOrdersReport(DateTime startDate, DateTime endDate, string status)
+    {
+        var orders = orderService.GetAllOrders();
+
+        var orderDict = new List<OrderViewModel>();
+
+        foreach (var order in orders)
+        {
+            var user = service.GetUserById(order.UserID);
+            var orderBooks = orderBookService.GetOrderBooks(order.OrderID);
+
+            OrderViewModel orderViewModel = new OrderViewModel();
+
+            orderViewModel.user = user;
+            orderViewModel.OrderDate = order.OrderDate;
+            orderViewModel.OrderId = order.OrderID;
+            orderViewModel.TotalPrice = order.TotalPrice;
+            orderViewModel.status = order.status;
+            orderViewModel.OrderedBooks = orderBooks;
+
+            List<Book> books = new List<Book>();
+
+            foreach (var book in orderBooks)
+            {
+                var bookObject = bookService.GetBookById(book.BookID);
+                books.Add(bookObject);
+            }
+
+            var booksDictionary = books.ToDictionary(book => book.BookID);
+            orderViewModel.Books = booksDictionary;
+
+            orderDict.Add(orderViewModel);
+        }
+
+        var filteredOrders = orderDict.Where(order => order.OrderDate >= startDate && order.OrderDate <= endDate
+                                    && (status == null || order.status == status)).ToList();
+
+
+        var reportData = GenerateOrdersCsv(filteredOrders);
+        var fileName = $"OrdersReport_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.csv";
+
+        return File(Encoding.UTF8.GetBytes(reportData), "text/csv", fileName);
+    }
+
+    public IActionResult GenerateUsersReport()
+    {
+        var users = service.GetAllUsers();
+        var csvData = GenerateUsersCsv(users);
+
+        var fileName = $"UsersReport_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.csv";
+        return File(Encoding.UTF8.GetBytes(csvData), "text/csv", fileName);
+    }
+
+    // Helper to generate CSV for Orders
+    private string GenerateOrdersCsv(IEnumerable<OrderViewModel> orders)
+    {
+        var csv = new StringBuilder();
+        csv.AppendLine("OrderId,CustomerName,OrderDate,TotalPrice,Status");
+
+        foreach (var order in orders)
+        {
+            csv.AppendLine($"{order.OrderId},{order.user.Name}," +
+                $"{order.OrderDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)}," +
+                $"{order.TotalPrice},{order.status}");
+        }
+
+        return csv.ToString();
+    }
+
+    // Helper to generate CSV for users
+    private string GenerateUsersCsv(IEnumerable<User> users)
+    {
+        var csv = new StringBuilder();
+        csv.AppendLine("UserId,Name,Email,Role");
+
+        foreach (var user in users)
+        {
+            csv.AppendLine($"{user.UserID},{user.Name},{user.Email}," +
+                $"{user.Role}");
+        }
+
+        return csv.ToString();
     }
 }
 
